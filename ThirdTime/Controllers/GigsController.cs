@@ -26,13 +26,20 @@ namespace ThirdTime.Controllers
         [HttpPost]
         public ActionResult Create(GigFormViewModel viewModel)
         {
+            if (!ModelState.IsValid)
+            {
+                viewModel.Genres = _context.Genres.ToList();
+                return View("Create", viewModel);
+            }
+
+
             var artistId = User.Identity.GetUserId();
             // var artist = _context.Users.Single(u => u.Id == artistId);
             //var genre = _context.Genres.Single(g => g.Id == viewModel.Genre);
             var gig = new Gig
             {
                 ArtistId = artistId,
-                DateTime = viewModel.DateTime,
+                DateTime = viewModel.GetDateTime(),
                 GenreId = viewModel.Genre,
                 Venue = viewModel.Venue
             };
