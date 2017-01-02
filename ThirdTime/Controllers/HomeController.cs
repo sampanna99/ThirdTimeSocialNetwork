@@ -3,6 +3,7 @@ using System.Data.Entity;
 using System.Linq;
 using System.Web.Mvc;
 using ThirdTime.Models;
+using ThirdTime.ViewModels;
 
 namespace ThirdTime.Controllers
 {
@@ -18,7 +19,14 @@ namespace ThirdTime.Controllers
         public ActionResult Index()
         {
             var upcomingGigs = _context.Gigs.Include(a => a.Artist).Include(g => g.Genre).Where(g => g.DateTime > DateTime.Now);
-            return View(upcomingGigs);
+            var viewModel = new HomeViewModel
+            {
+                UpcomingGigs = upcomingGigs,
+                ShowActions = User.Identity.IsAuthenticated,
+                Heading = "Upcoming Gigs"
+            };
+
+            return View("Gigs", viewModel);
         }
 
         public ActionResult About()
